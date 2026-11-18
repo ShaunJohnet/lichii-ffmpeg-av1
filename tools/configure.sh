@@ -262,7 +262,7 @@ configure() {
 		echo "  $flag"
 	done
 
-	./configure "$@"
+	./configure "$@" || { tail -n 80 ffbuild/config.log; exit 1; }
 
 	if msvc; then
 		# backslash greatness
