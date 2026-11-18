@@ -23,6 +23,13 @@ if [ ! -d "$DAV1D_SRC" ]; then
 		tar xz -C "$ROOTDIR"
 fi
 
+# dav1d's MSVC stdatomic.h shim tests `defined(__clang__) && __has_include_next(<stdatomic.h>)`,
+# and MSVC 14.52 rejects the undefined function-like macro even after a false `defined`
+# (error C7780). This build always uses cl, so the clang branch is never taken.
+sed -i 's/defined(__clang__) && __has_include_next(<stdatomic.h>)/0/' \
+	"$DAV1D_SRC/include/compat/msvc/stdatomic.h"
+grep -q '^#if 0$' "$DAV1D_SRC/include/compat/msvc/stdatomic.h"
+
 python -m pip install --quiet --disable-pip-version-check meson ninja
 
 prefix="$(cygpath -m "$DAV1D_PREFIX")"
