@@ -14,23 +14,8 @@ add() {
 
 printf '['
 
-# winblows
-for plat in windows mingw; do
-    add windows-latest amd64 "$plat"
-    add windows-11-arm aarch64 "$plat"
-done
-
-# loonix
-add ubuntu-latest amd64 linux "ghcr.io/pkgforge-dev/archlinux:latest"
-add ubuntu-24.04-arm aarch64 linux "ghcr.io/pkgforge-dev/archlinux:latest"
-
-# android
-for arch in amd64 aarch64; do
-    add ubuntu-latest "$arch" android
-done
-
-# apple
-add macos-latest aarch64 macos
-add macos-latest aarch64 ios
+# Only the platform Lichii has no AV1 FFmpeg for: Windows on ARM64 (MSVC). x64 Windows and Linux
+# use Takoroka/ffmpeg-av1, and other platforms crueter-ci/FFmpeg.
+add windows-11-arm aarch64 windows
 
 echo ']'

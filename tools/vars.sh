@@ -24,3 +24,6 @@ export TIMESTAMP
 
 SHORTSHA=$(echo "$COMMIT" | cut -c1-10)
 export VERSION="$TAG-$TIMESTAMP-$SHORTSHA"
+
+# Fixed release name for the AV1 (libdav1d) builds; bump the suffix for each new build.
+export VERSION="$TAG-av1-arm64-1"

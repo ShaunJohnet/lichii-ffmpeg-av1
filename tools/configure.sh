@@ -8,6 +8,12 @@ set -e
 
 OUT_DIR="$PWD/out"
 
+# AV1 decoding through libdav1d (MSVC only)
+if msvc; then
+	sh tools/dav1d.sh
+	export PKG_CONFIG_PATH="$ROOTDIR/dav1d-install/lib/pkgconfig:$PKG_CONFIG_PATH"
+fi
+
 cd "$DIRECTORY"
 
 if android; then
@@ -55,6 +61,9 @@ if msvc; then
 
 	printf -- "-- vulkan: "
 	pkg-config --cflags --libs vulkan
+
+	printf -- "-- dav1d: "
+	pkg-config --cflags --libs dav1d
 
 	_end
 fi
@@ -146,6 +155,11 @@ flags() {
 	# DirectX
 	if windows; then
 		directx
+	fi
+
+	# AV1 through libdav1d
+	if msvc; then
+		on libdav1d decoder=libdav1d
 	fi
 
 	# android
