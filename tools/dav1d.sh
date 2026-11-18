@@ -40,14 +40,15 @@ msvc_bin="$(dirname "$(command -v cl)")"
 export PATH="$msvc_bin:$PATH"
 echo "-- link: $(command -v link)"
 
-# The DLL runtime (/MD) matches the rest of the package's MSVC build. dav1d's AArch64 assembly is
-# assembled with armasm64 through gas-preprocessor, which install-tools puts on PATH.
+# FFmpeg's MSVC toolchain builds with the static runtime (/MT), and a /MD dav1d leaves its __imp_
+# CRT imports unresolved there, so match it. dav1d's AArch64 assembly is assembled with armasm64
+# through gas-preprocessor, which install-tools puts on PATH.
 python -m mesonbuild.mesonmain setup "$DAV1D_SRC/build" "$DAV1D_SRC" \
 	--buildtype=release \
 	--default-library=static \
 	--prefix="$prefix" \
 	--libdir=lib \
-	-Db_vscrt=md \
+	-Db_vscrt=mt \
 	-Denable_tools=false \
 	-Denable_tests=false \
 	-Denable_examples=false
