@@ -27,6 +27,12 @@ python -m pip install --quiet --disable-pip-version-check meson ninja
 
 prefix="$(cygpath -m "$DAV1D_PREFIX")"
 
+# Git for Windows' /usr/bin/link (coreutils) shadows MSVC's link.exe, which meson rejects. Put
+# the directory of cl.exe, where MSVC's link.exe lives, first.
+msvc_bin="$(dirname "$(command -v cl)")"
+export PATH="$msvc_bin:$PATH"
+echo "-- link: $(command -v link)"
+
 # The DLL runtime (/MD) matches the rest of the package's MSVC build. dav1d's AArch64 assembly is
 # assembled with armasm64 through gas-preprocessor, which install-tools puts on PATH.
 python -m mesonbuild.mesonmain setup "$DAV1D_SRC/build" "$DAV1D_SRC" \
